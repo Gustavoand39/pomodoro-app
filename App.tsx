@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   SafeAreaView,
@@ -21,6 +21,30 @@ const App = (): JSX.Element => {
   const [time, setTime] = useState<number>(timerValues["Pomodoro"]);
   const [currentTimer, setCurrentTimer] = useState<TimerType>("Pomodoro");
 
+  let interval: NodeJS.Timeout | undefined = undefined;
+
+  useEffect(() => {
+    if (isRunning) {
+      interval = setInterval(() => {
+        setTime((prevTime) => {
+          if (prevTime === 0) {
+            playAlarm();
+            setIsRunning(false);
+            return timerValues[currentTimer];
+          }
+
+          return prevTime - 1;
+        });
+      }, 10);
+    } else {
+      clearInterval(interval);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isRunning]);
+
   const handleRun = (): void => {
     playSound();
     setIsRunning(!isRunning);
@@ -29,6 +53,14 @@ const App = (): JSX.Element => {
   const playSound = async (): Promise<void> => {
     const { sound } = await Audio.Sound.createAsync(
       require("./assets/press.mp3")
+    );
+
+    await sound.playAsync();
+  };
+
+  const playAlarm = async (): Promise<void> => {
+    const { sound } = await Audio.Sound.createAsync(
+      require("./assets/clock-alarm.mp3")
     );
 
     await sound.playAsync();
