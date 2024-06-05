@@ -11,19 +11,19 @@ import {
 import { Audio } from "expo-av";
 
 import Header from "./src/components/Header";
+import Timer from "./src/components/Timer";
 import { TimerType } from "./src/types/TypeTimer";
 import timerValues from "./src/constants/timerValues";
 import colors from "./src/constants/colors";
-import Timer from "./src/components/Timer";
 
 const App = (): JSX.Element => {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [time, setTime] = useState<number>(timerValues["Pomodoro"]);
   const [currentTimer, setCurrentTimer] = useState<TimerType>("Pomodoro");
 
-  let interval: NodeJS.Timeout | undefined = undefined;
-
   useEffect(() => {
+    let interval: NodeJS.Timeout | undefined = undefined;
+
     if (isRunning) {
       interval = setInterval(() => {
         setTime((prevTime) => {
@@ -35,7 +35,7 @@ const App = (): JSX.Element => {
 
           return prevTime - 1;
         });
-      }, 10);
+      }, 1000);
     } else {
       clearInterval(interval);
     }
