@@ -43,7 +43,11 @@ const App = (): JSX.Element => {
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isRunning]);
+  }, [isRunning, currentTimer]);
+
+  useEffect(() => {
+    if (isRunning) setIsRunning(false);
+  }, [currentTimer]);
 
   const handleRun = (): void => {
     playSound();
