@@ -21,7 +21,18 @@ const App = (): JSX.Element => {
   const [time, setTime] = useState<number>(timerValues["Pomodoro"]);
   const [currentTimer, setCurrentTimer] = useState<TimerType>("Pomodoro");
 
-  const handleRun = (): void => setIsRunning(!isRunning);
+  const handleRun = (): void => {
+    playSound();
+    setIsRunning(!isRunning);
+  };
+
+  const playSound = async (): Promise<void> => {
+    const { sound } = await Audio.Sound.createAsync(
+      require("./assets/press.mp3")
+    );
+
+    await sound.playAsync();
+  };
 
   return (
     <SafeAreaView
